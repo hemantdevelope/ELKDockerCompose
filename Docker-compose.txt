@@ -1,0 +1,35 @@
+version: '3.0'
+Services:
+	elasticsearch:
+		volumes:
+		- elaslogs:/var/
+		- elasdata:
+		network:
+		- elknetwork
+		ports:
+		- "9200:9200"
+		- "9300:9300"
+	kibana:
+		volume:
+		- logstashDB:
+		network:
+		- elknetwork
+		ports:
+		- "5400:5400"
+		depends_on: elasticsearch
+	
+	logstash:
+		network:
+		- elknetwork
+		port:
+		- "5200:5200"
+		depends_on: elasticsearch
+	 
+
+volume:
+	elaslogs: {}
+	elasdata: {}
+	logstashDB: {}
+network:
+	elknetwork:
+		driver: bridge
